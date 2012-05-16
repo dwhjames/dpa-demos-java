@@ -9,17 +9,31 @@ package uk.ac.ox.softeng.dpa.creational;
 public class SingletonDemo {
 	
 	public static void main(String[] args) {
+		try {
+			// force load the class files
+			Class.forName("uk.ac.ox.softeng.dpa.creational.Singleton");
+			Class.forName("uk.ac.ox.softeng.dpa.creational.LazySingleton");
+			Class.forName("uk.ac.ox.softeng.dpa.creational.NestedLazySingleton");
+			Class.forName("uk.ac.ox.softeng.dpa.creational.EnumSingleton");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 		Object state = new Object();
 		
+		System.out.println("Set state of Singleton");
 		Singleton.getInstance().set(state);
 		System.out.println(state == Singleton.getInstance().get());
 		
+		System.out.println("Set state of LazySingleton");
 		LazySingleton.getInstance().set(state);
 		System.out.println(state == LazySingleton.getInstance().get());
 		
+		System.out.println("Set state of NestedLazySingleton");
 		NestedLazySingleton.getInstance().set(state);
 		System.out.println(state == NestedLazySingleton.getInstance().get());
 		
+		System.out.println("Set state of EnumSingleton");
 		EnumSingleton.INSTANCE.set(state);
 		System.out.println(state == EnumSingleton.INSTANCE.get());
 	}
@@ -53,6 +67,9 @@ abstract class State implements IState {
  */
 class Singleton extends State {
 	private static final Singleton instance = new Singleton();
+	static {
+		System.out.println("Singleton initialized!");
+	}
 	
 	private Singleton() { }
 	
@@ -76,6 +93,7 @@ class LazySingleton extends State {
 	public static synchronized LazySingleton getInstance() {
 		if (instance == null) {
 			instance = new LazySingleton();
+			System.out.println("LazySingleton initialized!");
 		}
 		return instance;
 	}
@@ -94,6 +112,9 @@ class NestedLazySingleton extends State {
 	
 	private static class SingletonHolder {
 		public static final NestedLazySingleton instance = new NestedLazySingleton();
+		static {
+			System.out.println("NestedLazySingleton initialized!");
+		}
 	}
 	
 	public static NestedLazySingleton getInstance() {
@@ -111,6 +132,9 @@ class NestedLazySingleton extends State {
  */
 enum EnumSingleton implements IState {
 	INSTANCE;
+	static {
+		System.out.println("EnumLazySingleton initialized!");
+	}
 	
 	private Object state;
 
